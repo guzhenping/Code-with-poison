@@ -3,6 +3,8 @@ module code-with-poison
 go 1.13
 
 require (
+	github.com/awalterschulze/gographviz v0.0.0-20190522210029-fa59802746ab
+	github.com/deckarep/golang-set v1.7.1
 	github.com/go-sql-driver/mysql v0.0.0-20170715192408-3955978caca4
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/pingcap/errors v0.11.4 // indirect

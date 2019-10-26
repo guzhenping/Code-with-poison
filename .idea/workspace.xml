@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b512efc-315d-4855-b1e5-b99501c3f35b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/common.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/filter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/optimize.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/filter_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common.go" beforeDir="false" afterPath="$PROJECT_DIR$/common.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sql.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,19 +79,41 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build code-with-poison (1)">
+    <configuration name="go build code-with-poison (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="code-with-poison" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <package value="code-with-poison" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build code-with-poison" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="code-with-poison" />
       <working_directory value="$PROJECT_DIR$/" />
-      <kind value="PACKAGE" />
+      <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/sql.go" />
       <package value="code-with-poison" />
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
+    <configuration name="Test_test in code-with-poison" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="code-with-poison" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="code-with-poison" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^Test_test$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build code-with-poison (1)" />
         <item itemvalue="Go Build.go build code-with-poison" />
+        <item itemvalue="Go Test.Test_test in code-with-poison" />
       </list>
     </recent_temporary>
   </component>
@@ -119,7 +144,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="explain init" />
-    <option name="LAST_COMMIT_MESSAGE" value="explain init" />
+    <MESSAGE value="封装函数" />
+    <option name="LAST_COMMIT_MESSAGE" value="封装函数" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
