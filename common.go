@@ -237,7 +237,7 @@ func getDesr(table string) ([]Describe, error) {
 }
 
 // 传递 explain 中的 operator
-func judgeIsIndexByColumnIds(operation string) bool {
+func judgeIsIndexByColumnName(operation string) bool {
 	isIndex := false
 	desribes, err := getDesr("trips")
 	if err != nil {
@@ -253,4 +253,17 @@ func judgeIsIndexByColumnIds(operation string) bool {
 		}
 	}
 	return isIndex
+}
+
+func getIdxFromColumnName(name string) string {
+	indexs,err := getIndex(tableName)
+	if err!=nil {
+		fmt.Println("getIndex",err)
+	}
+	for _,v := range indexs{
+		if v.ColumnName == name {
+			return v.KeyName
+		}
+	}
+	return ""
 }

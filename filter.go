@@ -85,17 +85,19 @@ func indexCheck(rawSQL string) {
 				node := getPrefixPath(v.Id)
 				father := childFatherMap[node]
 				fatherOpera := explainsMap[father]
-				if !judgeIsIndexByColumnIds(fatherOpera) {
+				if !judgeIsIndexByColumnName(fatherOpera) {
 					grandFather := childFatherMap[father]
 					grandFatherOpera := explainsMap[grandFather]
-					if judgeIsIndexByColumnIds(grandFatherOpera) {
-						fmt.Println("[INFO] please use index")
+					if judgeIsIndexByColumnName(grandFatherOpera) {
+						fmt.Println("[INFO] please use index1")
 					} else {
 						fmt.Println("[INFO] need add index")
 					}
-				} else {
-					fmt.Println("[INFO] please use index")
 				}
+				//TODO:存在多个indexTable 和 TableScan 并存 ，仅 TableScan 存在的两种情况
+				// else {
+				//	fmt.Println("[INFO] please use index2")
+				//}
 			}
 		}
 	} else {
@@ -104,45 +106,3 @@ func indexCheck(rawSQL string) {
 
 }
 
-func optimizeIndex(rawSQL string) {
-
-	sqlStr := fmt.Sprintf("explain %s", rawSQL)
-	explains, err := getExplains(sqlStr)
-	if err != nil {
-		return
-	}
-	explainsMap := make(map[string]string)
-
-	var isIndexExist bool
-	var isTableScanExist bool
-	childFatherMap := getChildFatherMap(rawSQL)
-	for _, v := range explains {
-		node := getPrefixPath(v.Id)
-		explainsMap[node] = v.Operator
-		// 包含 isIndexExist
-		if strings.Contains(v.Id, "IndexScan") {
-			isIndexExist = true
-		}
-		// 包含 TableScan
-		if strings.Contains(v.Id, "TableScan") {
-			isTableScanExist = true
-		}
-	}
-
-	if isIndexExist == false && isTableScanExist == true {
-		for _, v := range explains {
-			if strings.Contains(v.Id, "TableScan") {
-				node := getPrefixPath(v.Id)
-				father := childFatherMap[node]
-				fatherOpera := explainsMap[father]
-				if !judgeIsIndexByColumnIds(fatherOpera) {
-					fmt.Println("[INFO] need add index")
-				} else {
-					fmt.Println("[INFO] please use index")
-				}
-			}
-		}
-	} else {
-		fmt.Println("[INFO] Good, using IndexScan")
-	}
-}
