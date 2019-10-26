@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/awalterschulze/gographviz"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -238,18 +237,19 @@ func getDesr(table string) ([]Describe, error) {
 }
 
 // 传递 explain 中的 operator
-// 返回 传入字段型如 eq(Column#5, 1) 判断其是否为索引
 func judgeIsIndexByColumnIds(operation string) bool {
-	isIndex := true
+	isIndex := false
 	desribes, err := getDesr("trips")
 	if err != nil {
 		fmt.Println("getDesr err", err)
 	}
-	list := getColumnIds(operation)
+	// member_type
+	list := getColumnNameByFatherOperator(operation)
 	for _, v := range list {
-		index, _ := strconv.Atoi(v)
-		if desribes[index-1].Key == "" {
-			isIndex = false
+		for _,d := range desribes{
+			if d.Field == v && d.Key != ""{
+				isIndex = true
+			}
 		}
 	}
 	return isIndex

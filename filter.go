@@ -5,7 +5,57 @@ import (
 	"strings"
 )
 
-func dataSetCheck(rawSQL string) {
+//| └─TableReader_21       | 583666.00 | root      | data:Selection_20                                                     |
+//|   └─Selection_20       | 583666.00 | cop[tikv] | gt(Column#5, 1)                                                       |
+//|     └─TableScan_19     | 583666.00 | cop[tikv] | table:trips, range:[-inf,+inf], keep order:false
+
+func dataSetCheck(rawSQL string, args float32) {
+	sqlStr := fmt.Sprintf("explain %s", rawSQL)
+	explains, err := getExplains(sqlStr)
+	if err != nil {
+		return
+	}
+	explainsMap := make(map[string]string)
+	explainsMapWithCount := make(map[string]float32)
+	var isTableScanExist bool
+	childFatherMap := getChildFatherMap(rawSQL)
+	for _, v := range explains {
+		node := getPrefixPath(v.Id)
+		explainsMap[node] = v.Operator
+		explainsMapWithCount[node] = v.Count
+		// 包含 isIndexExist
+		// 包含 TableScan
+		if strings.Contains(v.Id, "TableScan") {
+			isTableScanExist = true
+		}
+	}
+	if isTableScanExist == true {
+		for _, v := range explains {
+			if strings.Contains(v.Id, "TableScan") {
+
+				// deal with TableScan
+				node := getPrefixPath(v.Id)
+				if v.Count > args {
+					// deal with Selection
+					father := childFatherMap[node]
+					fatherCount := explainsMapWithCount[father]
+					if fatherCount > args {
+						// deal with TableReader
+						grandFather := childFatherMap[father]
+						grandFatherCount := explainsMapWithCount[grandFather]
+						if grandFatherCount > args {
+							fmt.Println(fmt.Sprintf("[INFO] %s scan data too much", getPrefixPath(v.Id)))
+						}
+					}
+				}
+				if v.Count < args {
+					fmt.Println(fmt.Sprintf("[INFO] %s scan data correct", getPrefixPath(v.Id)))
+				}
+			}
+		}
+	}
+}
+func indexCheck(rawSQL string) {
 	sqlStr := fmt.Sprintf("explain %s", rawSQL)
 	explains, err := getExplains(sqlStr)
 	if err != nil {
@@ -16,6 +66,7 @@ func dataSetCheck(rawSQL string) {
 	var isIndexExist bool
 	var isTableScanExist bool
 	childFatherMap := getChildFatherMap(rawSQL)
+
 	for _, v := range explains {
 		node := getPrefixPath(v.Id)
 		explainsMap[node] = v.Operator
@@ -29,10 +80,32 @@ func dataSetCheck(rawSQL string) {
 		}
 	}
 	if isIndexExist == false && isTableScanExist == true {
-
+		for _, v := range explains {
+			if strings.Contains(v.Id, "TableScan") {
+				node := getPrefixPath(v.Id)
+				father := childFatherMap[node]
+				fatherOpera := explainsMap[father]
+				if !judgeIsIndexByColumnIds(fatherOpera) {
+					grandFather := childFatherMap[father]
+					grandFatherOpera := explainsMap[grandFather]
+					if judgeIsIndexByColumnIds(grandFatherOpera) {
+						fmt.Println("[INFO] please use index")
+					} else {
+						fmt.Println("[INFO] need add index")
+					}
+				} else {
+					fmt.Println("[INFO] please use index")
+				}
+			}
+		}
+	} else {
+		fmt.Println("[INFO] Good, using IndexScan")
 	}
+
 }
-func indexCheck(rawSQL string) {
+
+func optimizeIndex(rawSQL string) {
+
 	sqlStr := fmt.Sprintf("explain %s", rawSQL)
 	explains, err := getExplains(sqlStr)
 	if err != nil {
@@ -70,6 +143,6 @@ func indexCheck(rawSQL string) {
 			}
 		}
 	} else {
-		fmt.Println("[INFO] IndexScan is ok")
+		fmt.Println("[INFO] Good, using IndexScan")
 	}
 }

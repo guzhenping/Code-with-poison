@@ -79,3 +79,18 @@ func getColumnIds(str string) []string {
 	}
 	return res
 }
+func getColumnNameByFatherOperator(str string) []string {
+	var res []string
+	rex := regexp.MustCompile("[^\\(]\\w+.\\w+.\\w+,|[^\\(]\\w+.\\w+.\\w+\\)")
+	params := rex.FindAllStringSubmatch(str, -1)
+	for _,v:= range params{
+		for _,n := range v{
+			// 按照括号切割 取前面的 [[bikeshare.trips.member_type)]]
+			splitStr := strings.Split(n,".")
+			// member_type)
+			splitStr2 := splitStr[len(splitStr)-1]
+			res = append(res, splitStr2[:len(splitStr2)-1])
+		}
+	}
+	return res
+}
