@@ -9,5 +9,6 @@ require (
 	github.com/pingcap/tidb v0.0.0-20190108123336-c68ee7318319
 	github.com/pingcap/tipb v0.0.0-20191022094114-a2e8c3fa634b // indirect
 	github.com/sirupsen/logrus v1.4.2 // indirect
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 	golang.org/x/text v0.3.2 // indirect
 )
