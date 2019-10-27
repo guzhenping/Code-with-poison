@@ -44,13 +44,13 @@ func optimizeIndex(rawSQL string) {
 						dbAndTableName := getDBAndTableNameByOperator(grandFatherOpera)
 						// TODO: colunumNameList > 1 暂时不处理
 						if len(colunumNameList) <= 1 {
-							index := getIdxFromColumnName(colunumNameList[0],dbAndTableName)
-							splitStrs := strings.SplitAfter(rawSQL,dbAndTableName)
+							index := getIdxFromColumnName(colunumNameList[0], dbAndTableName)
+							splitStrs := strings.SplitAfter(rawSQL, dbAndTableName)
 							var optimizeStrs []string
 							optimizeStrs = append(optimizeStrs, splitStrs[0])
-							optimizeStrs = append(optimizeStrs, fmt.Sprintf("use index(%s)",index))
+							optimizeStrs = append(optimizeStrs, fmt.Sprintf("use index(%s)", index))
 							optimizeStrs = append(optimizeStrs, splitStrs[1])
-							fmt.Println("[INFO] please use index:", strings.Join(optimizeStrs," "))
+							fmt.Println("[INFO] please use index:", strings.Join(optimizeStrs, " "))
 						}
 					} else {
 						fmt.Println("[INFO] need add index")
@@ -63,3 +63,13 @@ func optimizeIndex(rawSQL string) {
 	}
 }
 
+func printfExplain(rawSQL string) {
+	sqlStr := fmt.Sprintf("explain %s", rawSQL)
+	explains, err := getExplains(sqlStr)
+	if err != nil {
+		return
+	}
+	for _, v := range explains {
+		fmt.Println(v.Id, int(v.Count), v.Task, v.Operator)
+	}
+}
