@@ -180,4 +180,5 @@ StreamAgg_10 1 root funcs:count(1)
 过滤与优化结果:
 [INFO] Good, using IndexScan
 ===========================================
-···
+
+```
