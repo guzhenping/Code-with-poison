@@ -66,7 +66,6 @@ func indexCheck(rawSQL string) {
 	var isIndexExist bool
 	var isTableScanExist bool
 	childFatherMap := getChildFatherMap(rawSQL)
-
 	for _, v := range explains {
 		node := getPrefixPath(v.Id)
 		explainsMap[node] = v.Operator

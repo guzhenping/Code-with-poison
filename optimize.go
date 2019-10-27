@@ -41,10 +41,11 @@ func optimizeIndex(rawSQL string) {
 					grandFatherOpera := explainsMap[grandFather]
 					if judgeIsIndexByColumnName(grandFatherOpera) {
 						colunumNameList := getColumnNameByFatherOperator(grandFatherOpera)
+						dbAndTableName := getDBAndTableNameByOperator(grandFatherOpera)
 						// TODO: colunumNameList > 1 暂时不处理
 						if len(colunumNameList) <= 1 {
-							index := getIdxFromColumnName(colunumNameList[0])
-							splitStrs := strings.SplitAfter(rawSQL,tableName)
+							index := getIdxFromColumnName(colunumNameList[0],dbAndTableName)
+							splitStrs := strings.SplitAfter(rawSQL,dbAndTableName)
 							var optimizeStrs []string
 							optimizeStrs = append(optimizeStrs, splitStrs[0])
 							optimizeStrs = append(optimizeStrs, fmt.Sprintf("use index(%s)",index))
