@@ -2,24 +2,24 @@
 本项目旨在解决用户的SQL 质量参差不齐，迁移和使用过程中，引发集群资源紧张的问题。
 
 # 背景
-在手动迁移800+ 存量MySQL SQL -> TiDB的过程中，肉眼观察集群CPU和Mem消耗，找到了不少问题。包括
+在手动迁移800+ 存量MySQL SQL -> TiDB的过程中，观察集群CPU和Mem消耗，找到了不少问题。包括
 - 本身有索引，未用上
   - SQL中在where条件里使用了内置函数(cast/date/json)，导致优化器不能用索引
   - SQL中where使用与column类型不同的value，比如：varchar = int
   - SQL中使用IN语法，导致优化器错判使用Tablescan，忽略索引
 
 - 细节问题
-SQL中对bit类型的字段查询，使用值等于 '1' / '0' (char类型)
-SQL中where条件用到varchar类型字段的值等于，MySQL可以大小写不敏感，TiDB大小写敏感
-无法兼容使用MySQL table: mysql.help_topic
+  - SQL中对bit类型的字段查询，使用值等于 '1' / '0' (char类型)
+  - SQL中where条件用到varchar类型字段的值等于，MySQL可以大小写不敏感，TiDB大小写敏感
+  - 无法兼容使用MySQL table: mysql.help_topic
 
 
 以上问题，需要过滤和优化：
-过滤：SQL中仅用到TableScan
-过滤：SQL中仅用到TableScan，且Selection/TableReader的Count的行数大于1000w
-优化：指定where条件中的字段，使用IndexScan
-优化：提示添加索引，add index idx_xx(where条件中的字段)
-优化：提示强制指定索引，use index( column_name)
+- 过滤：SQL中仅用到TableScan
+- 过滤：SQL中仅用到TableScan，且Selection/TableReader的Count的行数大于1000w
+- 优化：指定where条件中的字段，使用IndexScan
+- 优化：提示添加索引，add index idx_xx(where条件中的字段)
+- 优化：提示强制指定索引，use index( column_name)
 
 # 优化案例：
 表结构：
